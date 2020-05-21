@@ -1,5 +1,0 @@
-{
-          "phpcs.ignorePatterns": [
-                    "\"phpcs.standard\": \"PSR2\""
-          ]
-}
