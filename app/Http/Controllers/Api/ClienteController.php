@@ -15,10 +15,9 @@ class ClienteController extends Controller
      * @param ClienteRepository $clienteRepository
      * @param Request $request
      */
-    public function __construct(ClienteRepository $clienteRepository, ClienteRequest $request)
+    public function __construct(ClienteRepository $clienteRepository)
     {
         $this->clienteRepository = $clienteRepository;
-        $this->request = $request;
     }
 
     /**
@@ -32,9 +31,9 @@ class ClienteController extends Controller
     /**
      * Armazena um recurso recém-criado no armazenamento.
      */
-    public function store()
+    public function store(ClienteRequest $request)
     {
-        return $this->clienteRepository->salvar($this->request);
+        return $this->clienteRepository->salvar($request);
     }
 
     /**
@@ -48,9 +47,9 @@ class ClienteController extends Controller
     /**
      * Atualiza o recurso especificado por Id.
      */
-    public function update($id)
+    public function update($id, ClienteRequest $request)
     {
-        return $this->clienteRepository->atualizar($id, $this->request);
+        return $this->clienteRepository->atualizar($id, $request);
     }
 
     /**

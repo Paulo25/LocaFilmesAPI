@@ -5,12 +5,14 @@ namespace App\Repositories;
 use App\Models\Cliente;
 use App\Enums\Mensagem;
 use App\Enums\StatusCode;
-use Illuminate\Support\Facades\DB;
+use App\Traits\FileSystemLogic;
 use Illuminate\Support\Facades\Storage;
 
 
 class ClienteRepository
 {
+
+    use FileSystemLogic;
 
     /**
      * ClienteRepository constructor.
@@ -27,9 +29,8 @@ class ClienteRepository
      */
     public function listar()
     {
-
-        if (!$data = $this->cliente->all()) {
-            return response()->json(['Mensagem' => Mensagem::MSG001], StatusCode::NOT_FOUND);
+        if (!$data = $this->cliente->orderBy('id', 'desc')->get()) {
+            return response()->json(['error' => Mensagem::MSG001], StatusCode::NOT_FOUND);
         }
 
         return response()->json($data, StatusCode::OK);
@@ -42,35 +43,17 @@ class ClienteRepository
      */
     public function salvar($request)
     {
-        $request->validate([
-            'nome' => 'required',
-        ]);
+        $data = $request->all();
 
-        $dataForm = $request->all();
+        if (!$path = $this->storeImage($request))
+            return response()->json(['error' => Mensagem::MSG008], StatusCode::INTERNAL_SERVER_ERROR);
 
-        try {
+        $data['image'] = $path;
 
-            if ($request->hasFile('image') && $request->file('image')->isValid()) {
-                $extension = $request->image->extension();
-                $name = uniqid(date('His'));
+        if (!$response = $this->cliente->create($data))
+            return response()->json(['success' => Mensagem::MSG002], StatusCode::UNPROCESSABLE_ENTITY);
 
-                $nameFile = "{$name}.{$extension}";
-
-                $upload = $request->image->storeAs('clientes', $nameFile);
-
-                if (!$upload)
-                    return response()->json(['error' => 'Falha ao fazer upload!'], 500);
-                else
-                    $dataForm['image'] = $nameFile;
-            }
-
-            $data = $this->cliente->create($dataForm);
-
-        } catch (\Exception $e) {
-            return response()->json([['Mensagem' => Mensagem::MSG002], ['Error' => $e->getMessage()]], StatusCode::INTERNAL_SERVER_ERROR);
-        }
-
-        return response()->json([['Mensagem' => Mensagem::MSG007], $data], StatusCode::CREATED);
+        return response()->json(['success' => Mensagem::MSG007, $response], StatusCode::CREATED);
     }
 
 
@@ -83,10 +66,10 @@ class ClienteRepository
     {
 
         if (!checkId($id))
-            return response()->json(['Mensagem' => Mensagem::MSG003], StatusCode::BAD_REQUEST);
+            return response()->json(['error' => Mensagem::MSG003], StatusCode::BAD_REQUEST);
 
         if (!$data = $this->cliente->find($id))
-            return response()->json(['Mensagem' => Mensagem::MSG001], StatusCode::NOT_FOUND);
+            return response()->json(['error' => Mensagem::MSG001], StatusCode::NOT_FOUND);
 
         return response()->json($data, StatusCode::OK);
     }
@@ -99,46 +82,25 @@ class ClienteRepository
      */
     public function atualizar($id, $request)
     {
-
-        $this->validate($request, $this->cliente->rules());
-
-        $dataForm = $request->all();
+        $data = $request->except('_method');
 
         if (!checkId($id))
-            return response()->json(['Mensagem' => Mensagem::MSG003], StatusCode::BAD_REQUEST);
+            return response()->json(['error' => Mensagem::MSG003], StatusCode::BAD_REQUEST);
 
-        if (!$data = $this->cliente->find($id))
-            return response()->json(['Mensagem' => Mensagem::MSG001], StatusCode::NOT_FOUND);
+        if (!$cliente = $this->cliente->find($id))
+            return response()->json(['error' => Mensagem::MSG001], StatusCode::NOT_FOUND);
 
-        try {
-            DB::beginTransaction();
+        if (isset($data['image'])) {
+            if (!$path = $this->storeImage($request, $cliente))
+                return response()->json(['error' => Mensagem::MSG008], StatusCode::INTERNAL_SERVER_ERROR);
 
-            if ($request->hasFile('image') && $request->file('image')->isValid()) {
-
-                if ($data->image)
-                    Storage::disk('public')->delete("/clientes/$data->image");
-
-                $extension = $request->image->extension();
-                $name = uniqid(date('His'));
-                $nameFile = "{$name}.{$extension}";
-
-                $upload = $request->image->storeAs('clientes', $nameFile);
-
-                if (!$upload)
-                    return response()->json(['Mensagem' => Mensagem::MSG005], StatusCode::INTERNAL_SERVER_ERROR);
-                else
-                    $dataForm['image'] = $nameFile;
-            }
-
-            $data->update($dataForm);
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([['Mensagem' => Mensagem::MSG002], [$e->getMessage()]], StatusCode::INTERNAL_SERVER_ERROR);
+            $data['image'] = $path;
         }
 
-        return response()->json([['Mensagem' => Mensagem::MSG006], $data], StatusCode::OK);
+        if (!$response =  $cliente->update($data))
+            return response()->json(['success' => Mensagem::MSG002], StatusCode::UNPROCESSABLE_ENTITY);
+
+        return response()->json(['success' => Mensagem::MSG006, 'id' => $id, $data], StatusCode::OK);
     }
 
     /**
@@ -148,25 +110,18 @@ class ClienteRepository
      */
     public function deletar($id)
     {
-
         if (!checkId($id))
-            return response()->json(['Mensagem' => Mensagem::MSG003], StatusCode::BAD_REQUEST);
+            return response()->json(['error' => Mensagem::MSG003], StatusCode::BAD_REQUEST);
 
         if (!$data = $this->cliente->find($id))
-            return response()->json(['Mensagem' => Mensagem::MSG001], StatusCode::NOT_FOUND);
+            return response()->json(['error' => Mensagem::MSG001], StatusCode::NOT_FOUND);
 
-        try {
-            if ($data->image) {
-                Storage::disk('public')->delete("/clientes/$data->image");
-            }
+        if ($data->image)
+            Storage::disk('public')->delete("/clientes/$data->image");
 
-            $data->delete();
-        } catch (\Exception $e) {
-            return response()->json([['Mensagem' => Mensagem::MSG002], [$e->getMessage()]], StatusCode::INTERNAL_SERVER_ERROR);
-        }
+        if (!$data->delete())
+            return response()->json(['error' => Mensagem::MSG002], StatusCode::UNPROCESSABLE_ENTITY);
 
-        return response()->json(['Mensagem' => Mensagem::MSG004], StatusCode::OK);
-
+        return response()->json(['success' => Mensagem::MSG004], StatusCode::OK);
     }
-
 }

@@ -24,9 +24,9 @@ class ClienteRequest extends FormRequest
     public function rules()
     {
         return [
-            'nome' => 'required',
-            'cpf_cnpj' => 'required|unique:clientes',
-            'image' => 'image'
+            'nome' => 'required|min:11|max:150',
+            'cpf_cnpj' => 'required|min:11|max:15|unique:clientes',
+            'image' => 'nullable|image|mimes:png,jpg,jpeg,gif,svg|max:2048'
         ];
     }
 
@@ -37,8 +37,13 @@ class ClienteRequest extends FormRequest
     public function messages(){
         return [
             'required' => 'Preencha o campo :attribute.',
-            'cpf_cnpj.unique' => 'Este cpf/cnpj já existe na nossa base de dados.',
-            'image' => 'Arquivo invalido!'
+            'cpf_cnpj.unique' => 'Este cpf/cnpj já está cadastrado.',
+            'image' => 'Arquivo invalido!',
+            'min' => 'O campo deve ser no minímo 11 caractéres.',
+			'image.max' => 'Este arquivo excedeu o tamanho permitido de 2048.',
+            'nome.max' => 'O campo deve ser no máximo 150 caractéres.',
+            'cpf_cnpj.max' => 'O campo deve ser no máximo 11 caractéres.',
+            'mimes' => 'Tipo de arquivo não corresponde ao campo :attribute.'
         ];
     }
 }

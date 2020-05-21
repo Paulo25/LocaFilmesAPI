@@ -14,7 +14,7 @@ class CreateClientesTable extends Migration
     public function up()
     {
         Schema::create('clientes', function (Blueprint $table) {
-            $table->bigIncrements('id_cliente');
+            $table->bigIncrements('id');
             $table->string('nome', 150)->comment('Nome do cliente.');
             $table->string('image', 100)->nullable()->comment('Campo de foto, tipo imagem.');
             $table->string('cpf_cnpj', 19)->unique()->comment('Cpf ou Cnpj do cliente.');
