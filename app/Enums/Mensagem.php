@@ -14,5 +14,6 @@ class Mensagem
     const MSG007 = 'Registro foi criado com sucesso!';
     const MSG008 = 'Falha ao fazer upload!';
     const MSG009 = 'Erro de validação!';
+    const MSG010 = 'Operação realizada com sucesso!';
 
 }

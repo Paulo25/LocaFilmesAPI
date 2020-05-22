@@ -8,8 +8,9 @@ use App\Enums\StatusCode;
 use App\Traits\FileSystemLogic;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use App\Http\Controllers\ApiController;
 
-class ClienteRepository
+class ClienteRepository extends ApiController
 {
 
     use FileSystemLogic;
@@ -30,10 +31,10 @@ class ClienteRepository
     public function listar()
     {
         if (!$data = $this->cliente->orderBy('id', 'desc')->get()) {
-            return response()->json(['error' => Mensagem::MSG001], StatusCode::NOT_FOUND);
+            return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
         }
 
-        return response()->json($data, StatusCode::OK);
+        return $this->successResponse($data, Mensagem::MSG010, StatusCode::OK);
     }
 
     /**
@@ -47,18 +48,18 @@ class ClienteRepository
 
         $validator = Validator::make($data, $this->cliente->rules(), $this->cliente->messages());
 
-        if ($validator->fails()) 
-            return response()->json($validator->messages(), StatusCode::BAD_REQUEST);
+        if ($validator->fails())
+            return $this->errorResponse([], $validator->errors(), StatusCode::BAD_REQUEST);
 
         if (!$path = $this->storeImage($request))
-            return response()->json(['error' => Mensagem::MSG008], StatusCode::INTERNAL_SERVER_ERROR);
+            return $this->errorResponse([], Mensagem::MSG008, StatusCode::INTERNAL_SERVER_ERROR);
 
         $data['image'] = $path;
 
         if (!$response = $this->cliente->create($data))
             return response()->json(['success' => Mensagem::MSG002], StatusCode::UNPROCESSABLE_ENTITY);
 
-        return response()->json(['success' => Mensagem::MSG007, $response], StatusCode::CREATED);
+        return $this->successResponse($response, Mensagem::MSG007, StatusCode::CREATED);
     }
 
 
@@ -71,12 +72,12 @@ class ClienteRepository
     {
 
         if (!checkId($id))
-            return response()->json(['error' => Mensagem::MSG003], StatusCode::BAD_REQUEST);
+            return $this->errorResponse([], Mensagem::MSG003, StatusCode::BAD_REQUEST);
 
         if (!$data = $this->cliente->find($id))
-            return response()->json(['error' => Mensagem::MSG001], StatusCode::NOT_FOUND);
+            return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
 
-        return response()->json($data, StatusCode::OK);
+        return $this->successResponse($data, Mensagem::MSG010, StatusCode::OK);
     }
 
     /**
@@ -91,18 +92,18 @@ class ClienteRepository
 
         $validator = Validator::make($data, $this->cliente->rules($id), $this->cliente->messages());
 
-        if ($validator->fails()) 
-            return response()->json($validator->messages(), StatusCode::BAD_REQUEST);
+        if ($validator->fails())
+            return $this->errorResponse([], $validator->errors(), StatusCode::BAD_REQUEST);
 
         if (!checkId($id))
-            return response()->json(['error' => Mensagem::MSG003], StatusCode::BAD_REQUEST);
+            return $this->errorResponse([], Mensagem::MSG003, StatusCode::BAD_REQUEST);
 
         if (!$cliente = $this->cliente->find($id))
-            return response()->json(['error' => Mensagem::MSG001], StatusCode::NOT_FOUND);
+            return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
 
         if (isset($data['image'])) {
             if (!$path = $this->storeImage($request, $cliente))
-                return response()->json(['error' => Mensagem::MSG008], StatusCode::INTERNAL_SERVER_ERROR);
+                return $this->errorResponse([], Mensagem::MSG008, StatusCode::INTERNAL_SERVER_ERROR);
 
             $data['image'] = $path;
         }
@@ -110,7 +111,7 @@ class ClienteRepository
         if (!$response =  $cliente->update($data))
             return response()->json(['success' => Mensagem::MSG002], StatusCode::UNPROCESSABLE_ENTITY);
 
-        return response()->json(['success' => Mensagem::MSG006, 'id' => $id, $data], StatusCode::OK);
+        return $this->successResponse($response, Mensagem::MSG006, StatusCode::OK);
     }
 
     /**
@@ -121,17 +122,17 @@ class ClienteRepository
     public function deletar($id)
     {
         if (!checkId($id))
-            return response()->json(['error' => Mensagem::MSG003], StatusCode::BAD_REQUEST);
+            return $this->errorResponse([], Mensagem::MSG003, StatusCode::BAD_REQUEST);
 
-        if (!$data = $this->cliente->find($id))
-            return response()->json(['error' => Mensagem::MSG001], StatusCode::NOT_FOUND);
+        if (!$cliente = $this->cliente->find($id))
+            return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
 
-        if ($data->image)
-            Storage::disk('public')->delete("/clientes/$data->image");
+        if ($cliente->image)
+            Storage::disk('public')->delete("/clientes/$cliente->image");
 
-        if (!$data->delete())
-            return response()->json(['error' => Mensagem::MSG002], StatusCode::UNPROCESSABLE_ENTITY);
+        if (!$cliente->delete())
+            return $this->errorResponse([], Mensagem::MSG002, StatusCode::UNPROCESSABLE_ENTITY);
 
-        return response()->json(['success' => Mensagem::MSG004], StatusCode::OK);
+        return $this->successResponse([], Mensagem::MSG004, StatusCode::OK);
     }
 }
