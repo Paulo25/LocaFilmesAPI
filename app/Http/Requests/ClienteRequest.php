@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ClienteRequest extends FormRequest
 {
@@ -21,12 +22,13 @@ class ClienteRequest extends FormRequest
      *
      * @return array
      */
-    public function rules()
+    public function rules($id = null)
     {
         return [
             'nome' => 'required|min:11|max:150',
-            'cpf_cnpj' => 'required|min:11|max:15|unique:clientes',
-            'image' => 'nullable|image|mimes:png,jpg,jpeg,gif,svg|max:2048'
+            'cpf_cnpj' => 'required|min:11|max:15|'.Rule::unique('clientes')->ignore($id),
+            'image' => 'nullable|image|mimes:png,jpg,jpeg,gif,svg|max:2048',
+            
         ];
     }
 
