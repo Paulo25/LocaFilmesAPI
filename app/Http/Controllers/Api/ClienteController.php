@@ -31,7 +31,7 @@ class ClienteController extends Controller
     /**
      * Armazena um recurso recém-criado no armazenamento.
      */
-    public function store(ClienteRequest $request)
+    public function store(Request $request)
     {
         return $this->clienteRepository->salvar($request);
     }
@@ -47,7 +47,7 @@ class ClienteController extends Controller
     /**
      * Atualiza o recurso especificado por Id.
      */
-    public function update($id, ClienteRequest $request)
+    public function update($id, Request $request)
     {
         return $this->clienteRepository->atualizar($id, $request);
     }

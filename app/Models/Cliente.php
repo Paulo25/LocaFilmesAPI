@@ -25,26 +25,11 @@ class Cliente extends Model
      *
      * @return array
      */
-    public function rulesStore()
+    public function rules($id = null)
     {
         return [
             'nome' => 'required|min:11|max:150',
-            'cpf_cnpj' => 'required|min:11|max:15|unique:clientes',
-            'image' => 'nullable|image|mimes:png,jpg,jpeg,gif,svg|max:2048',
-            
-        ];
-    }
-
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rulesUpdate($id = null)
-    {
-        return [
-            'nome' => 'required|min:11|max:150',
-            'cpf_cnpj' => 'required|min:11|max:15'.Rule::unique('clientes')->ignore($id),
+            'cpf_cnpj' => 'required|min:11|max:15|'.Rule::unique('clientes')->ignore($id),
             'image' => 'nullable|image|mimes:png,jpg,jpeg,gif,svg|max:2048',
             
         ];

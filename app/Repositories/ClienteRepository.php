@@ -7,7 +7,7 @@ use App\Enums\Mensagem;
 use App\Enums\StatusCode;
 use App\Traits\FileSystemLogic;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\Validator;
 
 class ClienteRepository
 {
@@ -44,6 +44,11 @@ class ClienteRepository
     public function salvar($request)
     {
         $data = $request->all();
+
+        $validator = Validator::make($data, $this->cliente->rules(), $this->cliente->messages());
+
+        if ($validator->fails()) 
+            return response()->json($validator->messages(), StatusCode::BAD_REQUEST);
 
         if (!$path = $this->storeImage($request))
             return response()->json(['error' => Mensagem::MSG008], StatusCode::INTERNAL_SERVER_ERROR);
@@ -83,6 +88,11 @@ class ClienteRepository
     public function atualizar($id, $request)
     {
         $data = $request->except('_method');
+
+        $validator = Validator::make($data, $this->cliente->rules($id), $this->cliente->messages());
+
+        if ($validator->fails()) 
+            return response()->json($validator->messages(), StatusCode::BAD_REQUEST);
 
         if (!checkId($id))
             return response()->json(['error' => Mensagem::MSG003], StatusCode::BAD_REQUEST);
