@@ -57,7 +57,7 @@ class ClienteRepository extends ApiController
         $data['image'] = $path;
 
         if (!$response = $this->cliente->create($data))
-            return response()->json(['success' => Mensagem::MSG002], StatusCode::UNPROCESSABLE_ENTITY);
+            return $this->errorResponse([], Mensagem::MSG002, StatusCode::UNPROCESSABLE_ENTITY);
 
         return $this->successResponse($response, Mensagem::MSG007, StatusCode::CREATED);
     }
@@ -109,7 +109,7 @@ class ClienteRepository extends ApiController
         }
 
         if (!$response =  $cliente->update($data))
-            return response()->json(['success' => Mensagem::MSG002], StatusCode::UNPROCESSABLE_ENTITY);
+            return $this->errorResponse([], Mensagem::MSG002, StatusCode::UNPROCESSABLE_ENTITY);
 
         return $this->successResponse($response, Mensagem::MSG006, StatusCode::OK);
     }
