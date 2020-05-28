@@ -6,32 +6,26 @@ use App\Enums\Mensagem;
 use App\Enums\StatusCode;
 use App\Http\Controllers\ApiController;
 use Illuminate\Http\Request;
-use App\Models\Cliente;
-use App\Traits\FileSystemLogic;
+use App\Models\Documento;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
-class ClienteController extends ApiController
+class DocumentoController extends ApiController
 {
-    use FileSystemLogic;
 
-    /**
-     * ClienteController constructor.
-     * @param Cliente $cliente
-     * @param Request $request
-     */
-    public function __construct(Cliente $cliente)
+    public function __construct(Documento $documento)
     {
-        $this->cliente = $cliente;
+        $this->documento = $documento;
     }
 
     /**
-     * Exibe uma listagem do recurso.
-     * @return \Illuminate\Http\JsonResponse
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        if (!$data = $this->cliente->orderBy('id', 'desc')->get()) {
+        if (!$data = $this->documento->orderBy('id', 'desc')->get()) {
             return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
         }
 
@@ -39,57 +33,55 @@ class ClienteController extends ApiController
     }
 
     /**
-     * Armazena um recurso na base.
-     * @param null $request
-     * @return \Illuminate\Http\JsonResponse
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
         $data = $request->all();
 
-        $validator = Validator::make($data, $this->cliente->rules(), $this->cliente->messages());
+        $validator = Validator::make($data, $this->documento->rules(), $this->documento->messages());
 
         if ($validator->fails())
             return $this->errorResponse($validator->errors(), Mensagem::MSG009, StatusCode::BAD_REQUEST);
 
-        if (!$path = $this->storeImage($request))
-            return $this->errorResponse([], Mensagem::MSG008, StatusCode::INTERNAL_SERVER_ERROR);
-
-        $data['image'] = $path;
-
-        if (!$response = $this->cliente->create($data))
+        if (!$response = $this->documento->create($data))
             return $this->errorResponse([], Mensagem::MSG002, StatusCode::UNPROCESSABLE_ENTITY);
 
         return $this->successResponse($response, Mensagem::MSG007, StatusCode::CREATED);
     }
 
     /**
-     * Buscar o recurso especificado por Id.
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * Display the specified resource.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         if (!checkId($id))
             return $this->errorResponse([], Mensagem::MSG003, StatusCode::BAD_REQUEST);
 
-        if (!$data = $this->cliente->find($id))
+        if (!$data = $this->documento->find($id))
             return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
 
         return $this->successResponse($data, Mensagem::MSG010, StatusCode::OK);
     }
 
     /**
-     * Atualiza o recurso especificado por Id.
-     * @param $id
-     * @param $request
-     * @return \Illuminate\Http\JsonResponse
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
-    public function update($id, Request $request)
+    public function update(Request $request, $id)
     {
         $data = $request->except('_method');
 
-        $validator = Validator::make($data, $this->cliente->rules($id), $this->cliente->messages());
+        $validator = Validator::make($data, $this->documento->rules($data['cliente_id']), $this->documento->messages());
 
         if ($validator->fails())
             return $this->errorResponse($validator->errors(), Mensagem::MSG009, StatusCode::BAD_REQUEST);
@@ -97,39 +89,30 @@ class ClienteController extends ApiController
         if (!checkId($id))
             return $this->errorResponse([], Mensagem::MSG003, StatusCode::BAD_REQUEST);
 
-        if (!$cliente = $this->cliente->find($id))
+        if (!$documento = $this->documento->find($id))
             return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
 
-        if (isset($data['image'])) {
-            if (!$path = $this->storeImage($request, $cliente))
-                return $this->errorResponse([], Mensagem::MSG008, StatusCode::INTERNAL_SERVER_ERROR);
-
-            $data['image'] = $path;
-        }
-
-        if (!$response =  $cliente->update($data))
+        if (!$response =  $documento->update($data))
             return $this->errorResponse([], Mensagem::MSG002, StatusCode::UNPROCESSABLE_ENTITY);
 
         return $this->successResponse($response, Mensagem::MSG006, StatusCode::OK);
     }
 
     /**
-     * Remove o recurso especificado por Id.
-     * @param $id
-     * @return \Illuminate\Http\JsonResponse
+     * Remove the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         if (!checkId($id))
             return $this->errorResponse([], Mensagem::MSG003, StatusCode::BAD_REQUEST);
 
-        if (!$cliente = $this->cliente->find($id))
+        if (!$documento = $this->documento->find($id))
             return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
 
-        if ($cliente->image)
-            Storage::disk('public')->delete("/{$cliente->image}");
-
-        if (!$cliente->delete())
+        if (!$documento->delete())
             return $this->errorResponse([], Mensagem::MSG002, StatusCode::UNPROCESSABLE_ENTITY);
 
         return $this->successResponse([], Mensagem::MSG004, StatusCode::OK);
@@ -140,9 +123,9 @@ class ClienteController extends ApiController
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function documento($id)
+    public function cliente($id)
     {
-        if (!$data = $this->cliente->with('documento')->find($id))
+        if (!$data = $this->documento->with('cliente')->find($id))
             return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
 
         return $this->successResponse($data, Mensagem::MSG010, StatusCode::OK);

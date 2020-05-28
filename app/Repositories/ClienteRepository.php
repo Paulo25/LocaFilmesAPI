@@ -70,7 +70,6 @@ class ClienteRepository extends ApiController
      */
     public function BuscarClientePorId($id)
     {
-
         if (!checkId($id))
             return $this->errorResponse([], Mensagem::MSG003, StatusCode::BAD_REQUEST);
 
@@ -134,5 +133,13 @@ class ClienteRepository extends ApiController
             return $this->errorResponse([], Mensagem::MSG002, StatusCode::UNPROCESSABLE_ENTITY);
 
         return $this->successResponse([], Mensagem::MSG004, StatusCode::OK);
+    }
+    
+    public function documento($id)
+    {
+        if (!$data = $this->cliente->with('documento')->find($id))
+            return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
+
+        return $this->successResponse($data, Mensagem::MSG010, StatusCode::OK);
     }
 }

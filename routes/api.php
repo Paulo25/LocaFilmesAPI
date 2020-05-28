@@ -18,5 +18,8 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-
+Route::apiResource('documentos', 'Api\DocumentoController');
 Route::apiResource('clientes', 'Api\ClienteController');
+
+Route::get('clientes/{id}/documento', 'Api\ClienteController@documento');
+Route::get('documentos/{id}/cliente', 'Api\DocumentoController@cliente');

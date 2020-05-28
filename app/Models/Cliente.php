@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Validation\Rule;
+use App\Models\Documento;
 
 class Cliente extends Model
 {
@@ -15,10 +15,15 @@ class Cliente extends Model
 
     protected $fillable = [
         'nome',
-        'cpf_cnpj',
         'image'
     ];
 
+    /**
+     * Get the documento record associated with the cliente.
+     */
+    public function documento(){
+        return $this->hasOne(Documento::class, 'cliente_id', 'id');
+    }
 
     /**
      * Get the validation rules that apply to the request.
@@ -29,7 +34,6 @@ class Cliente extends Model
     {
         return [
             'nome' => 'required|min:11|max:150',
-            'cpf_cnpj' => 'required|min:11|max:15|'.Rule::unique('clientes')->ignore($id),
             'image' => 'nullable|image|mimes:png,jpg,jpeg,gif,svg|max:2048',
             
         ];
@@ -42,13 +46,12 @@ class Cliente extends Model
     public function messages(){
         return [
             'required' => 'Preencha o campo :attribute.',
-            'cpf_cnpj.unique' => 'Este cpf/cnpj já está cadastrado.',
             'image' => 'Arquivo invalido!',
             'min' => 'O campo deve ser no minímo 11 caractéres.',
 			'image.max' => 'Este arquivo excedeu o tamanho permitido de 2048.',
             'nome.max' => 'O campo deve ser no máximo 150 caractéres.',
             'cpf_cnpj.max' => 'O campo deve ser no máximo 11 caractéres.',
-            'mimes' => 'Tipo de arquivo não corresponde ao campo :attribute.'
+            'mimes' => 'A imagem deve ser um arquivo do tipo: png, jpg, jpeg, gif, svg.'
         ];
     }
 
