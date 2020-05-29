@@ -13,7 +13,11 @@ use Illuminate\Support\Facades\Route;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-//
+// Artisan::call('cache:clear');
+// Artisan::call('config:clear');
+// Artisan::call('config:cache');
+// Artisan::call('view:clear');
+
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();
 //});
