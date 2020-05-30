@@ -147,4 +147,21 @@ class ClienteController extends ApiController
 
         return $this->successResponse($data, Mensagem::MSG010, StatusCode::OK);
     }
+
+
+    /**
+     * recuperar documento do cliente por Id.
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function telefone($id)
+    {
+        if (!checkId($id))
+            return $this->errorResponse([], Mensagem::MSG003, StatusCode::BAD_REQUEST);
+
+        if (!$data = $this->cliente->with('telefone')->find($id))
+            return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
+
+        return $this->successResponse($data, Mensagem::MSG010, StatusCode::OK);
+    }
 }

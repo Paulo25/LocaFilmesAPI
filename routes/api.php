@@ -22,8 +22,13 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
-Route::apiResource('documentos', 'Api\DocumentoController');
 Route::apiResource('clientes', 'Api\ClienteController');
-
 Route::get('clientes/{id}/documento', 'Api\ClienteController@documento');
+Route::get('clientes/{id}/telefone', 'Api\ClienteController@telefone');
+
+Route::apiResource('documentos', 'Api\DocumentoController');
 Route::get('documentos/{id}/cliente', 'Api\DocumentoController@cliente');
+
+Route::get('telefones/{id}/cliente', 'Api\TelefoneController@cliente');
+Route::apiResource('telefones', 'Api\TelefoneController');
+
