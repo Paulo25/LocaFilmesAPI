@@ -2,6 +2,7 @@
 
 use App\Models\Cliente;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Arr;
 
 class ClientesTableSeeder extends Seeder
 {
@@ -17,17 +18,62 @@ class ClientesTableSeeder extends Seeder
             [
                 'nome'   => 'Paulo Vitor',
                 'image' => '',
-                'cpf_cnpj' => '07596589689'
+                'created_at' => '2020-05-30 17:49:20',
+                'updated_at' => '2020-05-30 17:49:20'
             ],
             [
-                'nome'   => 'Maiara',
+                'nome'   => 'Maiara' . rand(90000, 11),
                 'image' => '',
-                'cpf_cnpj' => '05224585487'
+                'created_at' => '2020-05-30 17:49:20',
+                'updated_at' => '2020-05-30 17:49:20'
             ],
             [
-                'nome'   => 'Felipe',
+                'nome'   => 'Felipe' . rand(90000, 11),
                 'image' => '',
-                'cpf_cnpj' => '32165478998'
+                'created_at' => '2020-05-30 17:49:20',
+                'updated_at' => '2020-05-30 17:49:20'
+            ],
+            [
+                'nome'   => 'Luis' . rand(90000, 11),
+                'image' => '',
+                'created_at' => '2020-05-30 17:49:20',
+                'updated_at' => '2020-05-30 17:49:20'
+            ],
+            [
+                'nome'   => 'Leonardo' . rand(90000, 11),
+                'image' => '',
+                'created_at' => '2020-05-30 17:49:20',
+                'updated_at' => '2020-05-30 17:49:20'
+            ],
+            [
+                'nome'   => 'Larissa' . rand(90000, 11),
+                'image' => '',
+                'created_at' => '2020-05-30 17:49:20',
+                'updated_at' => '2020-05-30 17:49:20'
+            ],
+            [
+                'nome'   => 'Fernando' . rand(90000, 11),
+                'image' => '',
+                'created_at' => '2020-05-30 17:49:20',
+                'updated_at' => '2020-05-30 17:49:20'
+            ],
+            [
+                'nome'   => 'Lorana' . rand(90000, 11),
+                'image' => '',
+                'created_at' => '2020-05-30 17:49:20',
+                'updated_at' => '2020-05-30 17:49:20'
+            ],
+            [
+                'nome'   => 'Carlos' . rand(90000, 11),
+                'image' => '',
+                'created_at' => '2020-05-30 17:49:20',
+                'updated_at' => '2020-05-30 17:49:20'
+            ],
+            [
+                'nome'   => 'Leandro' . rand(90000, 11),
+                'image' => '',
+                'created_at' => '2020-05-30 17:49:20',
+                'updated_at' => '2020-05-30 17:49:20'
             ]
         ]);
     }

@@ -28,7 +28,7 @@ class TelefoneController extends ApiController
      */
     public function index()
     {
-        if (!$data = $this->telefone->orderBy('id', 'desc')->get())
+        if (!$data = $this->telefone->orderBy('id', 'asc')->paginate($this->totalPages))
             return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
 
         return $this->successResponse($data, Mensagem::MSG010, StatusCode::OK);

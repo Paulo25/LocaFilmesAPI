@@ -30,7 +30,7 @@ class FilmeController extends ApiController
      */
     public function index()
     {
-        if (!$data = $this->filme->orderBy('id', 'desc')->get()) {
+        if (!$data = $this->filme->orderBy('id', 'asc')->paginate($this->totalPages)) {
             return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
         }
 

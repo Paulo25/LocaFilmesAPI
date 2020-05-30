@@ -11,4 +11,6 @@ class ApiController extends Controller
      * Trait de respostas com métodos comuns para todos os controladores filhos
      */
     use ApiResponser;
+
+    protected $totalPages = 15;
 }

@@ -31,7 +31,7 @@ class ClienteController extends ApiController
      */
     public function index()
     {
-        if (!$data = $this->cliente->orderBy('id', 'desc')->get()) {
+        if (!$data = $this->cliente->orderBy('id', 'asc')->paginate($this->totalPages)) {
             return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
         }
 
@@ -195,7 +195,7 @@ class ClienteController extends ApiController
 
         if (!$cliente = $this->cliente->find($id))
             return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
-        
+
         $cliente->telefone;
         $cliente->documento;
         $cliente->filmesAlugados;
