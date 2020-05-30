@@ -46,6 +46,27 @@ trait FileSystemLogic
     }
 
     /**
+     * Armazena capas tipo imagens na storage filmes
+     */
+    public function storeCapaFilme($request, $data = null)
+    {
+        if ($request->hasFile('capa') && $request->file('capa')->isValid()) {
+
+            if (isset($data->capa) && $data->capa)
+                Storage::disk('public')->delete("/{$data->capa}");
+
+            $extension = $request->capa->extension();
+            $name = uniqid(date('His'));
+
+            $nameFile = "{$name}.{$extension}";
+
+            $path = $request->capa->storeAs('filmes', $nameFile);
+
+            return $path;
+        }
+    }
+
+    /**
      * Armazena arquivo pasta de guias-pedagogicos ou download ou imagem-associada
      *
      * @param $id integer

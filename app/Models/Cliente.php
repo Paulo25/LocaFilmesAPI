@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Documento;
+use App\Models\Telefone;
 
 class Cliente extends Model
 {
@@ -32,6 +33,13 @@ class Cliente extends Model
     public function telefone()
     {
         return $this->hasMany(Telefone::class, 'cliente_id', 'id');
+    }
+
+    /**
+     * 
+     */
+    public function filmesAlugados(){
+        return $this->belongsToMany(Filme::class, 'locacaos', 'cliente_id', 'filme_id');
     }
 
     /**

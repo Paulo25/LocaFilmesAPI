@@ -52,10 +52,12 @@ class ClienteController extends ApiController
         if ($validator->fails())
             return $this->errorResponse($validator->errors(), Mensagem::MSG009, StatusCode::BAD_REQUEST);
 
-        if (!$path = $this->storeImage($request))
-            return $this->errorResponse([], Mensagem::MSG008, StatusCode::INTERNAL_SERVER_ERROR);
+        if (isset($data['image'])) {
+            if (!$path = $this->storeImage($request))
+                return $this->errorResponse([], Mensagem::MSG008, StatusCode::INTERNAL_SERVER_ERROR);
 
-        $data['image'] = $path;
+            $data['image'] = $path;
+        }
 
         if (!$response = $this->cliente->create($data))
             return $this->errorResponse([], Mensagem::MSG002, StatusCode::UNPROCESSABLE_ENTITY);
@@ -163,5 +165,41 @@ class ClienteController extends ApiController
             return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
 
         return $this->successResponse($data, Mensagem::MSG010, StatusCode::OK);
+    }
+
+    /**
+     * recuperar filmes alugados do cliente por Id.
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function filmeAlugado($id)
+    {
+        if (!checkId($id))
+            return $this->errorResponse([], Mensagem::MSG003, StatusCode::BAD_REQUEST);
+
+        if (!$data = $this->cliente->with('filmesAlugados')->find($id))
+            return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
+
+        return $this->successResponse($data, Mensagem::MSG010, StatusCode::OK);
+    }
+
+    /**
+     * retorna um cliente completo (documento, telefone e filmes alugados)
+     * @param $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function clienteCompleto($id)
+    {
+        if (!checkId($id))
+            return $this->errorResponse([], Mensagem::MSG003, StatusCode::BAD_REQUEST);
+
+        if (!$cliente = $this->cliente->find($id))
+            return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
+        
+        $cliente->telefone;
+        $cliente->documento;
+        $cliente->filmesAlugados;
+
+        return $this->successResponse($cliente, Mensagem::MSG010, StatusCode::OK);
     }
 }
