@@ -47,7 +47,7 @@ class ClienteController extends ApiController
     {
         $data = $request->all();
 
-        $validator = Validator::make($data, $this->cliente->rules(), $this->cliente->messages());
+        $validator = Validator::make($data, $this->cliente->rules());
 
         if ($validator->fails())
             return $this->errorResponse($validator->errors(), Mensagem::MSG009, StatusCode::BAD_REQUEST);

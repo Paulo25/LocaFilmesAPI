@@ -14,11 +14,20 @@ $ php artisan key:generate;
 Instalar as dependências do laravel com composer: 
 $ composer install
 
-Instalar as dependências do Vuejs com npm, lembre ter instalado o NODEJS: 
+Instalar as dependências do js em node_modules com npm, lembre ter instalado o NODEJS: 
 $ npm install
+
+Publique as traduções para o português: 
+$ php artisan vendor:publish --tag=laravel-pt-br-localization
+
+Altere Linha 83 do arquivo config/app.php para:
+'locale' => 'pt_BR'
 
 Crie o esquema do banco de dados no Postgresql com o comando:
 $ php arstisan migrate
 
-Agora podemos arrancar o servidor embutido do framework: 
+Opcional, popule algumas tabela executando o comando:
+$ php artisan db:seed 
+
+Agora podemos le o servidor embutido do framework: 
 $ php artisan serve
