@@ -47,6 +47,21 @@ Opcional, popule algumas tabela executando o comando:
 $ php artisan db:seed 
 ```
 
+Configuração da politica de CORS - Os padrões estão definidos config/cors.php. Publique a configuração para copiar o arquivo para sua própria configuração:
+```shell
+php artisan vendor:publish --tag="cors"
+```
+
+Para permitir o CORS para todas as suas rotas, adicione o HandleCorsmiddleware na $middlewarepropriedade da app/Http/Kernel.phpclasse:
+```shell
+protected $middleware = [\Fruitcake\Cors\HandleCors::class];
+```
+
+Agora atualize a configuração para definir os caminhos nos quais você deseja executar o serviço CORS:
+```shell
+'paths' => ['api/*'],
+```
+
 Agora podemos le o servidor embutido do framework: 
  ```shell
 $ php artisan serve

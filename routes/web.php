@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -11,6 +13,11 @@
 |
 */
 
+
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::get('teste-api', function(){
+    return view('teste-api');
 });

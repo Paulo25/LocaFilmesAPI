@@ -22,6 +22,9 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //});
 
+// O laravel-cors é um pacote permite enviar cabeçalhos de compartilhamento de recursos de origem cruzada com a configuração de middleware do Laravel.
+
+
 //Rota de clientes
 Route::apiResource('clientes', 'Api\ClienteController');
 Route::get('clientes/{id}/documento', 'Api\ClienteController@documento')->name('cliente.documento');
