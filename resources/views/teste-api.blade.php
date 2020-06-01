@@ -13,7 +13,7 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script>
         function testarApi(){
-            axios.get('http://127.0.0.1:8000/api/clientes')
+            axios.get('http://127.0.0.1:8000/api/clientes-completo/1')
                 .then(response =>{
                     alert('Deu Certo');
                     console.log(response);

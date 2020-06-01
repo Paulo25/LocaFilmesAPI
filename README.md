@@ -37,9 +37,9 @@ Altere Linha 83 do arquivo config/app.php para:
 'locale' => 'pt_BR'
 ```
 
-Crie o esquema do banco de dados no Postgresql com o comando:
+Crie o esquema do banco de dados no Postgresql e popule algumas tabelas com semeador com o comando:
  ```shell
-$ php arstisan migrate
+$ php arstisan migrate --seed
 ```
 
 Opcional, popule algumas tabela executando o comando:
@@ -60,6 +60,11 @@ protected $middleware = [\Fruitcake\Cors\HandleCors::class];
 Agora atualize a configuração para definir os caminhos nos quais você deseja executar o serviço CORS:
 ```shell
 'paths' => ['api/*'],
+```
+O pacote do compositor jwt-auth possui um arquivo de configuração que você pode publicar,
+um novo arquivo de configuração é gerado em config / jwt.php.:
+```shell
+php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider"
 ```
 
 Agora podemos le o servidor embutido do framework: 
