@@ -15,5 +15,7 @@ class Mensagem
     const MSG008 = 'Falha ao fazer upload!';
     const MSG009 = 'Erro de validação!';
     const MSG010 = 'Operação realizada com sucesso!';
+    const MSG011 = 'Desconectado com sucesso!';
+    const MSG012 = 'Token renovado com sucesso!';
 
 }

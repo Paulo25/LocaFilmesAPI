@@ -25,7 +25,7 @@ class DocumentoController extends ApiController
      */
     public function index()
     {
-        if (!$data = $this->documento->orderBy('id', 'asc')->get()) {
+        if (!$data = $this->documento->orderBy('id', 'asc')->paginate($this->totalPages)) {
             return $this->errorResponse([], Mensagem::MSG001, StatusCode::NOT_FOUND);
         }
 

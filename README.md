@@ -67,6 +67,11 @@ um novo arquivo de configuração é gerado em config / jwt.php.:
 php artisan vendor:publish --provider="Tymon\JWTAuth\Providers\LaravelServiceProvider"
 ```
 
+Gerar chave secreta, Isso atualizará seu .envarquivo com algo comoJWT_SECRET=foobar:
+```shell
+php artisan jwt:secret
+```
+
 Agora podemos le o servidor embutido do framework: 
  ```shell
 $ php artisan serve
