@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('auth/login', 'Auth\AuthenticateController@login');
 
 /*
-ROTAS PROTEGIDAS COM JSON WEB TOKEN
+ROTAS SOBE A POLITICA DE CORS E PROTEGIDAS COM JSON WEB TOKEN
 USUÁRIO DEVE ESTAR LOGADO PARA ACESSAR ESSAS ROTAS
 */
 Route::group(['middleware' => ['auth:api']], function () {
@@ -31,7 +31,7 @@ Route::group(['middleware' => ['auth:api']], function () {
           });
 
           //Rota de clientes
-          Route::group(['prefix' => 'clientes'], function () {
+          Route::group(['prefix' => 'clientes'], function () { 
                     Route::apiResource('/', 'Api\ClienteController');
                     Route::get('{id}', 'Api\ClienteController@show')->name('cliente.show');
                     Route::get('{id}/documento', 'Api\ClienteController@documento')->name('cliente.documento');
@@ -81,4 +81,11 @@ Route::group(['middleware' => ['auth:api']], function () {
 //Route::middleware('auth:api')->get('/user', function (Request $request) {
 //    return $request->user();
 //});
-// O laravel-cors é um pacote permite enviar cabeçalhos de compartilhamento de recursos de origem cruzada com a configuração de middleware do Laravel.
+
+/* O laravel-cors: 
+É um pacote permite enviar cabeçalhos de compartilhamento de recursos de origem cruzada com a 
+configuração de middleware do Laravel.*/
+
+/*JSON Web Token:
+O JSON Web Token é um padrão da Internet para a criação de dados com assinatura opcional e/ou criptografia
+cuja sua payload contém o JSON que afirma algum número de declarações. -*
