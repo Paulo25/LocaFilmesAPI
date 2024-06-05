@@ -87,7 +87,7 @@ $ php artisan serve
 
 
 
-Documentação de Endpoints da API
+# Documentação de Endpoints da API
 Autenticação
 Esses endpoints são usados para a autenticação e requerem o uso de JSON Web Token (JWT). O usuário deve estar logado para acessar essas rotas.
 
