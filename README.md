@@ -1,7 +1,6 @@
 # API-RESTFUL-CORS-JWT-PHP-LARAVEL
 Este projeto é destinado a pôr em exercício aprendizados e conhecimento técnico simulando uma locadora de filmes.
 
-## Breifing
 ### Objetivo
 O principal objetivo deste projeto é criar um API em Laravel e utilizar os recursos que o framework oferece.
 
