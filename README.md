@@ -1,9 +1,23 @@
 # API-RESTFUL-CORS-JWT-PHP-LARAVEL
-HTTP, RESTful, Models, Migrations, Controllers, Rotas, Middlewares, Autenticação , Sessão, Validações e tratamento de erros.
+Este projeto é destinado a pôr em exercício aprendizados e conhecimento técnico simulando uma locadora de filmes.
 
+## Breifing
+### Objetivo
+O principal objetivo deste projeto é criar um API em Laravel e utilizar os recursos que o framework oferece.
+
+# Padrões adotados
+Para criação da API foi adotado alguns padrões e conceitos para melhor legibilidade e manutenção do projeto, como:
+SOLID
+Repository Pattern:atua como uma camada intermediária entre a aplicação e a fonte de dados, abstratizando as operações de acesso aos dados e permitindo a troca fácil de diferentes fontes de dados ou implementações de persistência.
 
 # Tecnologia e Ferramentas
-Backend - PHP 7.1+ Backend - Laravel Framework 5.7+ Backend - Servidor Apache 2.2 Backend - Banco de dados mysql 6.2+ 
+- PHP 7.1+
+- API desenvolvida em Laravel Framework 5.7 (Migrations, Middlewares, Factory, Seeder)
+- Banco de Dados em MYSQL 6.2+
+- API Restful
+- JWT e CORS
+- Validações e tratamento de erros.
+- Traits e Enums
 
 # Como Instalar
 
