@@ -1,3 +1,8 @@
+# Endpoints
+Veja aqui https://github.com/Paulo25/LocaFilmesAPI/wiki/Endpoints
+
+
+
 # API-RESTFUL-CORS-JWT-PHP-LARAVEL
 Este projeto é destinado a pôr em exercício aprendizados e conhecimento técnico simulando uma locadora de filmes.
 
